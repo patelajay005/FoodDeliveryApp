@@ -16,8 +16,8 @@ public class RestaurantController {
     @Autowired
     RestaurantService restaurantService;
 
-    @GetMapping("/fetchAllRestaurant")
-    public ResponseEntity<List<RestaurantDTO>> fetchAllRestaurantDetails() {
+    @GetMapping("/fetchAllRestaurants")
+    public ResponseEntity<List<RestaurantDTO>> fetchAllRestaurants() {
         List<RestaurantDTO> restaurantDTOS = restaurantService.fetchAllRestaurantDetails();
         return new ResponseEntity<>(restaurantDTOS, HttpStatus.OK);
     }

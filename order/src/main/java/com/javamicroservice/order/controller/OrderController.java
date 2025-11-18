@@ -19,9 +19,10 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @PostMapping("/createOrder")
+    @PostMapping("/saveOrder")
     public ResponseEntity<List<OrderDTO>> saveOrder(@RequestBody OrderDTO orderDTO) {
-        List<OrderDTO> orderDTOS =  orderService.saveOrder(orderDTO);
+        List<OrderDTO> orderDTOS = orderService.saveOrder(orderDTO);
         return new ResponseEntity<List<OrderDTO>>(orderDTOS, HttpStatus.CREATED);
     }
 }
+

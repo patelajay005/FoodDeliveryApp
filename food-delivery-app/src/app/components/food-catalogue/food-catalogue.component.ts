@@ -36,12 +36,20 @@ export class FoodCatalogueComponent implements OnInit {
     this.loading = true;
     this.foodCatalogueService.getFoodItemsByRestaurant(this.restaurantId).subscribe({
       next: (data) => {
+        console.log('Received data from API:', data);
         this.restaurant = data.restaurant;
-        this.foodItems = data.foodItemsList || [];
+        // Backend returns 'foodCatalogueDTOS', not 'foodItemsList'
+        this.foodItems = data.foodCatalogueDTOS || data.foodItemsList || [];
         
-        // Initialize quantities
+        console.log('Food items after mapping:', this.foodItems);
+        
+        // Initialize quantities for each item individually using ID or itemName as key
+        this.quantities = {};
         this.foodItems.forEach(item => {
-          this.quantities[item.itemName] = 1;
+          const key = item.id ? `id_${item.id}` : item.itemName;
+          if (key) {
+            this.quantities[key] = 1;
+          }
         });
         
         this.loading = false;
@@ -54,28 +62,47 @@ export class FoodCatalogueComponent implements OnInit {
     });
   }
 
-  incrementQuantity(itemName: string): void {
-    this.quantities[itemName]++;
+  getItemKey(item: FoodItem): string {
+    return item.id ? `id_${item.id}` : item.itemName;
   }
 
-  decrementQuantity(itemName: string): void {
-    if (this.quantities[itemName] > 1) {
-      this.quantities[itemName]--;
+  incrementQuantity(item: FoodItem): void {
+    const key = this.getItemKey(item);
+    if (!this.quantities[key]) {
+      this.quantities[key] = 1;
+    }
+    this.quantities[key] = (this.quantities[key] || 0) + 1;
+    // Force change detection by creating a new object reference
+    this.quantities = { ...this.quantities };
+  }
+
+  decrementQuantity(item: FoodItem): void {
+    const key = this.getItemKey(item);
+    if (!this.quantities[key]) {
+      this.quantities[key] = 1;
+    }
+    if (this.quantities[key] > 1) {
+      this.quantities[key] = this.quantities[key] - 1;
+      // Force change detection by creating a new object reference
+      this.quantities = { ...this.quantities };
     }
   }
 
   addToCart(item: FoodItem): void {
     if (this.restaurant) {
+      const key = this.getItemKey(item);
       const itemToAdd = {
         ...item,
-        quantity: this.quantities[item.itemName]
+        quantity: this.quantities[key] || 1
       };
       
       this.cartService.addToCart(itemToAdd, this.restaurant);
       alert(`${item.itemName} added to cart!`);
       
       // Reset quantity after adding to cart
-      this.quantities[item.itemName] = 1;
+      this.quantities[key] = 1;
+      // Force change detection
+      this.quantities = { ...this.quantities };
     }
   }
 

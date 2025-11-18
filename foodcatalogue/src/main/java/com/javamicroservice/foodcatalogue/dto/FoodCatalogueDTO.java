@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FoodCatalogueDTO {
 
+    private Integer id;
+
     private String itemName;
 
     private boolean isVeg;
@@ -21,6 +23,14 @@ public class FoodCatalogueDTO {
     private Integer restaurantId;
 
     private Integer quantity;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getItemName() {
         return itemName;

@@ -23,8 +23,8 @@ public class FoodCatalogueController {
         return new ResponseEntity<>(foodCatalogueDTOS, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{restaurantId}")
-    public ResponseEntity<FoodItemPage> fetchRestaurantWithFoodDetails(@PathVariable Integer restaurantId) {
+    @GetMapping("/fetchRestaurantAndFoodItemsById/{restaurantId}")
+    public ResponseEntity<FoodItemPage> fetchRestaurantAndFoodItemsById(@PathVariable Integer restaurantId) {
         return foodCatalogueService.fetchRestaurantWithFoodDetails(restaurantId);
     }
 }

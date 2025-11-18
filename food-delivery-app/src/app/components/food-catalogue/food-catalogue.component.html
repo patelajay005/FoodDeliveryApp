@@ -48,9 +48,9 @@
 
         <div class="food-actions">
           <div class="quantity-selector">
-            <button class="qty-btn" (click)="decrementQuantity(item.itemName)">-</button>
-            <span class="qty-value">{{ quantities[item.itemName] }}</span>
-            <button class="qty-btn" (click)="incrementQuantity(item.itemName)">+</button>
+            <button class="qty-btn" (click)="decrementQuantity(item)">-</button>
+            <span class="qty-value">{{ quantities[item.id ? 'id_' + item.id : item.itemName] || 1 }}</span>
+            <button class="qty-btn" (click)="incrementQuantity(item)">+</button>
           </div>
           <button class="btn btn-success" (click)="addToCart(item)">
             Add to Cart

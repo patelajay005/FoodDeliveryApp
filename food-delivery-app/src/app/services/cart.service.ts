@@ -70,6 +70,12 @@ export class CartService {
   }
 
   getItemCount(): number {
+    // Return the number of unique items in the cart, not the total quantity
+    return this.cartItems.value.length;
+  }
+
+  getTotalQuantity(): number {
+    // Return the total quantity of all items (sum of all item.quantity)
     return this.cartItems.value.reduce((count, item) => count + item.quantity, 0);
   }
 }
