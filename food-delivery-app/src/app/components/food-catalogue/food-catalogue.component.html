@@ -1,0 +1,63 @@
+<div class="food-catalogue">
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button class="btn btn-primary" (click)="loadFoodCatalogue()">Retry</button>
+  </div>
+
+  <div *ngIf="!loading && !error && restaurant">
+    <div class="restaurant-info card">
+      <div class="flex-between">
+        <div>
+          <h2>{{ restaurant.name }}</h2>
+          <p class="restaurant-desc">{{ restaurant.restaurantDescription }}</p>
+          <p class="location">📍 {{ restaurant.address }}, {{ restaurant.city }}</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-primary" (click)="goBack()">← Back</button>
+          <button class="btn btn-success" (click)="goToCart()" *ngIf="getCartItemCount() > 0">
+            🛒 Cart ({{ getCartItemCount() }})
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="menu-title">Menu Items</h3>
+
+    <div *ngIf="foodItems.length === 0" class="no-data">
+      <h3>No food items available</h3>
+      <p>This restaurant hasn't added any items to the menu yet.</p>
+    </div>
+
+    <div class="grid">
+      <div *ngFor="let item of foodItems" class="card food-card">
+        <div class="food-header">
+          <div>
+            <h4>{{ item.itemName }}</h4>
+            <span class="badge" [ngClass]="item.isVeg ? 'badge-veg' : 'badge-non-veg'">
+              {{ item.isVeg ? '🥬 Veg' : '🍗 Non-Veg' }}
+            </span>
+          </div>
+          <div class="price">₹{{ item.price }}</div>
+        </div>
+
+        <p class="description">{{ item.description }}</p>
+
+        <div class="food-actions">
+          <div class="quantity-selector">
+            <button class="qty-btn" (click)="decrementQuantity(item.itemName)">-</button>
+            <span class="qty-value">{{ quantities[item.itemName] }}</span>
+            <button class="qty-btn" (click)="incrementQuantity(item.itemName)">+</button>
+          </div>
+          <button class="btn btn-success" (click)="addToCart(item)">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

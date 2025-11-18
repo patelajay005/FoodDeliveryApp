@@ -1,0 +1,30 @@
+{
+  "/api/restaurant": {
+    "target": "http://localhost:9091",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/restaurant": "/restaurant"
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/api/foodCatalogue": {
+    "target": "http://localhost:9093",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/foodCatalogue": "/foodCatalogue"
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
+  "/api/order": {
+    "target": "http://localhost:9094",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/order": "/order"
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
+

@@ -1,0 +1,88 @@
+<div class="order-page">
+  <h2 class="page-title">Your Cart</h2>
+
+  <div *ngIf="orderPlaced" class="success-message card">
+    <div class="success-icon">✅</div>
+    <h3>Order Placed Successfully!</h3>
+    <p>Thank you for your order. You will be redirected to the home page shortly.</p>
+  </div>
+
+  <div *ngIf="!orderPlaced">
+    <div *ngIf="cartItems.length === 0" class="empty-cart card">
+      <div class="empty-icon">🛒</div>
+      <h3>Your cart is empty</h3>
+      <p>Start adding some delicious food items!</p>
+      <button class="btn btn-primary" (click)="continueShopping()">Browse Restaurants</button>
+    </div>
+
+    <div *ngIf="cartItems.length > 0">
+      <div class="restaurant-info card" *ngIf="restaurant">
+        <h3>🏪 {{ restaurant.name }}</h3>
+        <p class="location">📍 {{ restaurant.address }}, {{ restaurant.city }}</p>
+      </div>
+
+      <div class="cart-items">
+        <div *ngFor="let item of cartItems" class="card cart-item">
+          <div class="item-details">
+            <div class="item-header">
+              <h4>{{ item.itemName }}</h4>
+              <span class="badge" [ngClass]="item.isVeg ? 'badge-veg' : 'badge-non-veg'">
+                {{ item.isVeg ? '🥬 Veg' : '🍗 Non-Veg' }}
+              </span>
+            </div>
+            <p class="item-description">{{ item.description }}</p>
+          </div>
+
+          <div class="item-actions">
+            <div class="quantity-controls">
+              <button class="qty-btn" (click)="updateQuantity(item, item.quantity - 1)">-</button>
+              <span class="qty-value">{{ item.quantity }}</span>
+              <button class="qty-btn" (click)="updateQuantity(item, item.quantity + 1)">+</button>
+            </div>
+            
+            <div class="item-price">
+              <span class="price-label">Price:</span>
+              <span class="price-value">₹{{ item.price * item.quantity }}</span>
+            </div>
+
+            <button class="btn btn-danger btn-small" (click)="removeItem(item)">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="order-summary card">
+        <h3>Order Summary</h3>
+        <div class="summary-row">
+          <span>Total Items:</span>
+          <span class="summary-value">{{ cartItems.length }}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span>Total Amount:</span>
+          <span class="summary-value total-amount">₹{{ getTotalAmount() }}</span>
+        </div>
+
+        <div class="error-message" *ngIf="error">
+          <p>{{ error }}</p>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary" (click)="continueShopping()">
+            ← Continue Shopping
+          </button>
+          <button class="btn btn-danger" (click)="clearCart()">
+            Clear Cart
+          </button>
+          <button 
+            class="btn btn-success btn-large" 
+            (click)="placeOrder()" 
+            [disabled]="isPlacingOrder">
+            {{ isPlacingOrder ? 'Placing Order...' : 'Place Order' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
