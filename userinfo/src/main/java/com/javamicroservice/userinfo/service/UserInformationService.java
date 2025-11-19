@@ -43,4 +43,17 @@ public class UserInformationService {
 
         return optionalUserInformation.map(userInformation -> new ResponseEntity<>(UserInformationMapper.INFORMATION_MAPPER.userInformationEntityToDTO(userInformation), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(new UserInformationDTO(), HttpStatus.NOT_FOUND));
     }
+
+    public UserInformationDTO authenticateUser(String userName, String password) {
+        Optional<UserInformation> optionalUser = userInformationRepository.findByUserName(userName);
+        
+        if (optionalUser.isPresent()) {
+            UserInformation user = optionalUser.get();
+            // Simple password comparison (in production, use BCrypt password encoder)
+            if (user.getPassword() != null && user.getPassword().equals(password)) {
+                return UserInformationMapper.INFORMATION_MAPPER.userInformationEntityToDTO(user);
+            }
+        }
+        return null;
+    }
 }
