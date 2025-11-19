@@ -14,3 +14,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:9876/eureka/
+
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLongForHS256Algorithm}
+  expiration: 86400000
