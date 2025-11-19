@@ -24,15 +24,24 @@ export class RestaurantListingComponent implements OnInit {
 
   loadRestaurants(): void {
     this.loading = true;
+    this.error = '';
     this.restaurantService.getAllRestaurants().subscribe({
       next: (data) => {
         this.restaurants = data;
         this.loading = false;
+        this.error = '';
       },
       error: (err) => {
-        this.error = 'Failed to load restaurants. Please try again later.';
         this.loading = false;
         console.error('Error loading restaurants:', err);
+        
+        if (err.status === 401 || err.status === 403) {
+          this.error = 'Authentication required. Please login again.';
+        } else if (err.status === 0) {
+          this.error = 'Unable to connect to server. Please check if the backend is running.';
+        } else {
+          this.error = `Failed to load restaurants. Error: ${err.status} ${err.statusText || 'Unknown error'}`;
+        }
       }
     });
   }
