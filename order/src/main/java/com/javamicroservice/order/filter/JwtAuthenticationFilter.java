@@ -26,6 +26,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // Skip authentication for public endpoints
+        String requestPath = request.getRequestURI();
+        if (requestPath.startsWith("/actuator") || requestPath.startsWith("/eureka")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
@@ -43,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        // For protected endpoints, require a valid token
         if (tokenPresent) {
             if (username == null || !jwtUtil.validateToken(token)) {
                 sendErrorResponse(response, "Invalid or expired token");
@@ -58,6 +66,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+        } else {
+            // No token provided for protected endpoint
+            sendErrorResponse(response, "Authentication required: No token provided");
+            return;
         }
 
         filterChain.doFilter(request, response);

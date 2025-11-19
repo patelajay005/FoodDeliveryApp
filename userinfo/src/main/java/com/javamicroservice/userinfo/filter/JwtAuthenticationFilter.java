@@ -1,6 +1,6 @@
-package com.javamicroservice.restaurantlisting.filter;
+package com.javamicroservice.userinfo.filter;
 
-import com.javamicroservice.restaurantlisting.util.JwtUtil;
+import com.javamicroservice.userinfo.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // Skip authentication for public endpoints
         String requestPath = request.getRequestURI();
-        if (requestPath.startsWith("/actuator") || requestPath.startsWith("/eureka")) {
+        if (requestPath.startsWith("/actuator") || requestPath.startsWith("/eureka") || 
+            requestPath.startsWith("/auth") || requestPath.equals("/user/adduser")) {
             filterChain.doFilter(request, response);
             return;
         }
